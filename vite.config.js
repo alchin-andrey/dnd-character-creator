@@ -8,6 +8,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 export default defineConfig({
   plugins: [vue(), vueJsx()],
   base: '/dnd-character-creator/',
+  publicPath: '/dnd-character-creator/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
