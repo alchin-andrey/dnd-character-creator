@@ -9,7 +9,7 @@
 					:set="set_emoji"
 					:size="15"
 				/> -->
-        <img class="header_icon" :src="Lang_Icon" alt="Lang_Icon" />
+        <img id="Lang_Icon" class="header_icon" :src="Lang_Icon" alt="Lang_Icon" />
       </my-header-card>
       <my-header-card
         @click="showSettings__Main('lvl')"
@@ -22,14 +22,23 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { computed, reactive } from "vue";
+import { computed, reactive, } from "vue";
 import { useShowSettings } from "@/hooks/PAGES/common/useShowSettings.js";
 
 const store = useStore();
 const main_page = computed(() => store.state.pages.main_page);
+const dic = computed(() => store.state.dic.dic);
 
 const Em_Icon = computed(() => store.getters["dic/Em_Icon"]);
-const Lang_Icon = computed(() => store.getters["dic/Lang_Icon"]);
+// const Lang_Icon = computed(() => store.getters["dic/Lang_Icon"]);
+
+console.log('dic.value.select_lang:', dic.value.select_lang)
+// console.log('imgUrl:', imgUrl)
+// const imgUrl = new URL(`./img/icon/lang/icon_${dic.value.select_lang}.png`, import.meta.url)
+
+const Lang_Icon = computed(() => `./public/img/icon/lang/icon_${dic.value.select_lang}.png`)
+
+// const Lang_Icon = () => `public/img/icon/lang/icon_${dic.select_lang}.png`
 
 const MY = reactive(store.state.MY.MY);
 const Char_Lvl = computed(() => `lvl ${MY.level}`);
