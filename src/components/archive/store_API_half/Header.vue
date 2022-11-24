@@ -1,0 +1,102 @@
+<template>
+	<div class="header" @click="showMY()">
+		<my-logo-card @click="show('logo')" :active="logo" />
+		<div class="header_col">
+			<my-header-card @click="show('lang')" :active="lang">
+				<!-- <emoji v-for="n in em_Icon" :key="n"
+					:data="emojiIndex"
+					:emoji="n"
+					:set="set_emoji"
+					:size="15"
+				/> -->
+				<img class="header_icon" :src="Lang_Icon" alt="Lang_Icon" />
+			</my-header-card>
+			<my-header-card
+				@click="show('lvl')"
+				:active="lvl"
+				:slots="Char_Lvl"
+			/>
+		</div>
+	</div>
+</template>
+
+<script>
+import { computed } from 'vue'
+import { useStore } from "vuex";
+export default {
+	name: "Header",
+  setup() {
+    const store = useStore()
+
+    const logo = computed(() => store.state.race_page.race_page.shown.logo)
+    const lang = computed(() => store.state.race_page.race_page.shown.lang)
+    const lvl = computed(() => store.state.race_page.race_page.shown.lvl)
+    const dic_lang = computed(() => store.state.dic.dic.lang)
+
+    const MY = computed(() => store.state.MY.MY)
+    const MY_level = computed(() => store.state.MY.MY.level)
+
+    const Select_Lang = computed(() => store.getters["dic/Select_Lang"])
+
+    function show(name) {
+      store.dispatch("race_page/show", name)
+    }
+
+    return {
+      logo,
+      lang,
+      lvl,
+      dic_lang,
+      MY, 
+      MY_level, 
+      Select_Lang, 
+      show
+    }
+  },
+	computed: {
+		em_Icon() {
+			return this.dic_lang.find((icon) => icon.mark === this.Select_Lang)
+				.icon;
+		},
+
+		Lang_Icon() {
+			return require(`@/assets/img/icon/lang/icon_${this.Select_Lang}.png`);
+		},
+
+		Char_Lvl() {
+			return `lvl ${this.MY_level}`;
+		},
+	},
+
+	methods: {
+		showMY() {
+			console.log(this.MY);
+		},
+	},
+};
+</script>
+
+<style scoped>
+.header {
+	height: 28px;
+	margin: 0 0 22px 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.header_col {
+	height: 100%;
+	display: flex;
+	gap: 4px;
+}
+
+.header_icon {
+	height: 18px;
+}
+
+.emoji-mart-emoji {
+	padding: 0;
+	line-height: 0;
+}
+</style>
