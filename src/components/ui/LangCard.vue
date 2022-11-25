@@ -13,6 +13,7 @@
 	</div>
 </template>
 
+
 <script>
 export default {
 	name: "LangCard",
@@ -30,11 +31,18 @@ export default {
 			default: null,
 		},
 	},
-	computed: {
-		Lang_Icon() {
-			return `src/assets/img/icon/lang/icon_${this.mark}.png`;
-		},
-	},
+
+  setup(props) {
+    const Lang_Icon = new URL(`/src/assets/img/icon/lang/icon_${props.mark}.png`, import.meta.url).href
+    return {Lang_Icon}
+  },
+
+
+	// computed: {
+	// 	Lang_Icon() {
+	// 		return `src/assets/img/icon/lang/icon_${this.mark}.png`;
+	// 	},
+	// },
 };
 </script>
 

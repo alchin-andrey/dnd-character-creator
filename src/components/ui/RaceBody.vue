@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { computed, reactive, ref } from "vue";
 export default {
   name: "RaceBody",
   props: {
@@ -32,62 +34,57 @@ export default {
       default: null,
     },
   },
-  data() {
-    return {
-      hower_link: `${this.body_part}_hower`,
-    }
-  },
-  computed: {
-    growth() {
-      if (this.$root.MY.height === null) {
-      let max_height = this.$root.MY.race.settings.height.max
-      let min_height = this.$root.MY.race.settings.height.min
-        return (min_height + max_height) / 2;
+
+  setup(props) {
+    const store = useStore();
+const MY = reactive(store.state.MY.MY);
+const race_page = reactive(store.state.pages.race_page);
+
+
+const Char_Ethnos = computed(() => {
+      if(props.ethnos_name) {
+        return MY.race.noimg_ethnos ? "" : `/${props.ethnos_name}`;
       } else {
-        return this.$root.MY.height;
+        return MY.race.noimg_ethnos ? "" : `/${MY.ethnos.name}`;
       }
-    },
-
-    Hower() {
-      return this.$root.race_page[this.hower_link]
-    },
-
-    Char_Ethnos() {
-      if(this.ethnos_name) {
-        return this.$root.MY.race.noimg_ethnos ? "" : `/${this.ethnos_name}`;
-      } else {
-        return this.$root.MY.race.noimg_ethnos ? "" : `/${this.$root.MY.ethnos.name}`;
-      }
-    },
-
-    Char_Color() {
+    })
+    // const All_Ethnos_Obj = computed(() => {
+		// 	return MY.race.settings.ethnos;
+		// })
+    const Char_Color = computed(() => {
       if (
-        this.$root.MY.color[this.body_part] === null &&
-        this.$root.MY.ethnos.name === "common"
+        MY.color[props.body_part] === null &&
+        MY.ethnos.name === "common"
       ) {
-        return this.$root.MY.race.settings.color[this.body_part][0];
-      } else if (this.$root.MY.color[this.body_part] === null) {
-        return this.$root.MY.ethnos.color[this.body_part][0];
+        return MY.race.settings.color[props.body_part][0];
+      } else if (MY.color[props.body_part] === null) {
+        return MY.ethnos.color[props.body_part][0];
       } else {
-        return this.$root.MY.color[this.body_part];
+        return MY.color[props.body_part];
       }
-    },
+    })
 
-    Char_Img_Numb() {
-      if(this.ethnos_name) {
-        return this.$root.All_Ethnos_Obj[this.ethnos_name].color[this.body_part][0].img;
+    const Char_Img_Numb = computed(() => {
+      if(props.ethnos_name) {
+        return MY.race.settings.ethnos[props.ethnos_name].color[props.body_part][0].img;
       } else {
-        return this.Hower ? this.Hower.img : this.Char_Color.img;
+        return Hower.value ? Hower.value.img : Char_Color.value.img;
       }
-    },
+    })
 
-    Char_Img() {
-      let race = this.$root.MY.race.name;
-      let ethnos = this.Char_Ethnos;
-      let phisiological = this.$root.MY.gender.phisiological;
-      let img = this.Char_Img_Numb;
+    const hower_link = ref(`${props.body_part}_hower`)
+
+    const Hower = computed(() => {
+      return race_page[hower_link.value]
+    })
+
+    const Char_Img = computed(() => {
+      let race = MY.race.name;
+      let ethnos = Char_Ethnos.value;
+      let phisiological = MY.gender.phisiological;
+      let img = Char_Img_Numb.value;
       let sex;
-      let body = this.body_part;
+      let body = props.body_part;
       let result;
       if (phisiological === "female" || phisiological === "demigirl") {
         sex = "female";
@@ -95,7 +92,7 @@ export default {
         sex = "male";
       }
       try {
-        result = `src/assets/img/characters/${race}${ethnos}/${sex}/${body}/${img}.png`;
+        result = new URL(`/src/assets/img/characters/${race}${ethnos}/${sex}/${body}/${img}.png`, import.meta.url).href;
       } catch (e) {
         if (e.code !== "MODULE_NOT_FOUND") {
           throw e;
@@ -103,46 +100,171 @@ export default {
         result = null;
       }
       return result;
-    },
+    })
 
-    Calc_Img() {
+    function getCharColorHex(hower) {
+      if (props.ethnos_name && !Char_Img.value) {
+        return MY.race.settings.ethnos[props.ethnos_name].color[props.body_part][0].hex;
+      } else {
+        let hex = hower ? hower.hex : Char_Color.value.hex;
+      return hex;
+      }
+    }
+
+    const growth = computed(() => {
+      if (MY.height === null) {
+      let max_height = MY.race.settings.height.max
+      let min_height = MY.race.settings.height.min
+        return (min_height + max_height) / 2;
+      } else {
+        return MY.height;
+      }
+    })
+    const Calc_Img = computed(() => {
       if (
-        this.$root.race_page.shown.skin_color ||
-        this.$root.race_page.shown.eyes_color ||
-        this.$root.race_page.shown.hair_color
+        race_page.shown.skin_color ||
+        race_page.shown.eyes_color ||
+        race_page.shown.hair_color
       ) {
         return `100%`;
       } else {
-        return `calc(100% / 210 * ${this.growth})`;
+        return `calc(100% / 210 * ${growth.value})`;
       }
-    },
+    })
 
-    Char_Hight() {
-      if(this.ethnos_name) {
-        return `${this.$root.MY.race.ethnos_preview[0]}px`;
+    const Char_Hight = computed(() => {
+      if(props.ethnos_name) {
+        return `${MY.race.ethnos_preview[0]}px`;
       } else {
-        return this.Calc_Img;
+        return Calc_Img.value;
       }
-    },
+    })
 
-    Char_Left() {
-      if(this.ethnos_name) {
-        return `${this.$root.MY.race.ethnos_preview[1]}px`;
+    const Char_Left = computed(() => {
+      if(props.ethnos_name) {
+        return `${MY.race.ethnos_preview[1]}px`;
       } else {
         return `50%`;
       }
-    },
+    })
+
+
+
+    return {getCharColorHex, Char_Img, Hower, Calc_Img, Char_Left, Char_Hight}
+  },
+
+
+  data() {
+    // return {
+    //   hower_link: `${this.body_part}_hower`,
+    // }
+  },
+  computed: {
+    // growth() {
+    //   if (this.$root.MY.height === null) {
+    //   let max_height = this.$root.MY.race.settings.height.max
+    //   let min_height = this.$root.MY.race.settings.height.min
+    //     return (min_height + max_height) / 2;
+    //   } else {
+    //     return this.$root.MY.height;
+    //   }
+    // },
+
+    // Hower() {
+    //   return this.$root.race_page[this.hower_link]
+    // },
+
+    // Char_Ethnos() {
+    //   if(this.ethnos_name) {
+    //     return this.$root.MY.race.noimg_ethnos ? "" : `/${this.ethnos_name}`;
+    //   } else {
+    //     return this.$root.MY.race.noimg_ethnos ? "" : `/${this.$root.MY.ethnos.name}`;
+    //   }
+    // },
+
+    // Char_Color() {
+    //   if (
+    //     this.$root.MY.color[this.body_part] === null &&
+    //     this.$root.MY.ethnos.name === "common"
+    //   ) {
+    //     return this.$root.MY.race.settings.color[this.body_part][0];
+    //   } else if (this.$root.MY.color[this.body_part] === null) {
+    //     return this.$root.MY.ethnos.color[this.body_part][0];
+    //   } else {
+    //     return this.$root.MY.color[this.body_part];
+    //   }
+    // },
+
+    // Char_Img_Numb() {
+    //   if(this.ethnos_name) {
+    //     return this.$root.All_Ethnos_Obj[this.ethnos_name].color[this.body_part][0].img;
+    //   } else {
+    //     return this.Hower ? this.Hower.img : this.Char_Color.img;
+    //   }
+    // },
+
+    // Char_Img() {
+    //   let race = this.$root.MY.race.name;
+    //   let ethnos = this.Char_Ethnos;
+    //   let phisiological = this.$root.MY.gender.phisiological;
+    //   let img = this.Char_Img_Numb;
+    //   let sex;
+    //   let body = this.body_part;
+    //   let result;
+    //   if (phisiological === "female" || phisiological === "demigirl") {
+    //     sex = "female";
+    //   } else {
+    //     sex = "male";
+    //   }
+    //   try {
+    //     result = `/src/assets/img/characters/${race}${ethnos}/${sex}/${body}/${img}.png`;
+    //   } catch (e) {
+    //     if (e.code !== "MODULE_NOT_FOUND") {
+    //       throw e;
+    //     }
+    //     result = null;
+    //   }
+    //   return result;
+    // },
+
+    // Calc_Img() {
+    //   if (
+    //     this.$root.race_page.shown.skin_color ||
+    //     this.$root.race_page.shown.eyes_color ||
+    //     this.$root.race_page.shown.hair_color
+    //   ) {
+    //     return `100%`;
+    //   } else {
+    //     return `calc(100% / 210 * ${this.growth})`;
+    //   }
+    // },
+
+    // Char_Hight() {
+    //   if(this.ethnos_name) {
+    //     return `${this.$root.MY.race.ethnos_preview[0]}px`;
+    //   } else {
+    //     return this.Calc_Img;
+    //   }
+    // },
+
+    // Char_Left() {
+    //   if(this.ethnos_name) {
+    //     return `${this.$root.MY.race.ethnos_preview[1]}px`;
+    //   } else {
+    //     return `50%`;
+    //   }
+    // },
   },
 
   methods: {
-    getCharColorHex(hower) {
-      if (this.ethnos_name && !this.Char_Img) {
-        return this.$root.All_Ethnos_Obj[this.ethnos_name].color[this.body_part][0].hex;
-      } else {
-        let hex = hower ? hower.hex : this.Char_Color.hex;
-      return hex;
-      }
-    },
+    // getCharColorHex(hower) {
+    //   if (this.ethnos_name && !this.Char_Img) {
+    //     return this.$root.All_Ethnos_Obj[this.ethnos_name].color[this.body_part][0].hex;
+    //   } else {
+    //     let hex = hower ? hower.hex : this.Char_Color.hex;
+    //   return hex;
+    //   }
+    // },
 
   },
 };
