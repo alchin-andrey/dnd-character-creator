@@ -9,7 +9,7 @@
 					:set="set_emoji"
 					:size="15"
 				/> -->
-        <img id="Lang_Icon" class="header_icon" :src="getImageUrl(dic.select_lang)" alt="Lang_Icon" />
+        <img id="Lang_Icon" class="header_icon" :src="Lang_Icon" alt="Lang_Icon" />
       </my-header-card>
       <my-header-card
         @click="showSettings__Main('lvl')"
@@ -25,31 +25,14 @@ import { useStore } from "vuex";
 import { computed, reactive, } from "vue";
 import { useShowSettings } from "@/hooks/PAGES/common/useShowSettings.js";
 
-import LangIcon from '@/assets/img/icon/lang/icon_ru.png'
+import LangIcon from '@/assets/logo.svg'
 
 const store = useStore();
 const main_page = computed(() => store.state.pages.main_page);
 const dic = computed(() => store.state.dic.dic);
 
 const Em_Icon = computed(() => store.getters["dic/Em_Icon"]);
-// const Lang_Icon = computed(() => store.getters["dic/Lang_Icon"]);
-
-// console.log('dic.value.select_lang:', dic.value.select_lang)
-// console.log('imgUrl:', imgUrl)
-// const imgUrl = new URL(`./img/icon/lang/icon_${dic.value.select_lang}.png`, import.meta.url)
-
-function getImageUrl(name) {
-  return `/img/icon/lang/icon_${name}.png`
-}
-
-// const imageUrl = new URL(`@/dir/${dic.value.select_lang}.png`, import.meta.url).href
-// console.log('`./dir/${dic.value.select_lang}.png`:', `./dir/icon_${dic.value.select_lang}.png`)
-
-// console.log('import.meta.url:', new URL('./ru.png', import.meta.url))
-
-// const Lang_Icon = computed(() => `./public/img/icon/lang/icon_${dic.value.select_lang}.png`)
-
-// const Lang_Icon = () => `public/img/icon/lang/icon_${dic.select_lang}.png`
+const Lang_Icon = new URL(`/src/assets/img/icon/lang/icon_${dic.value.select_lang}.png`, import.meta.url).href
 
 const MY = reactive(store.state.MY.MY);
 const Char_Lvl = computed(() => `lvl ${MY.level}`);
