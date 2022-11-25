@@ -26,16 +26,7 @@
 <script>
 export default {
   name: "MyAttribute",
-  data() {
-    return {
-      inputValue: "",
-    };
-  },
   props: {
-    modelValue: {
-      type: Number,
-      default: null,
-    },
     title: {
       type: String,
       default: null,
@@ -64,6 +55,20 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+
+  setup(props) {
+
+    function getImage(name) {
+      if (name === null) {
+        return null;
+      } else if (props.numb > 0) {
+        return new URL(`/src/assets/img/icon/atribute/${name}_active.svg`, import.meta.url).href;
+      } else {
+        return new URL(`/src/assets/img/icon/atribute/${name}_passive.svg`, import.meta.url).href;
+      }
+    }
+    return {getImage}
   },
 
   computed: {
@@ -99,16 +104,15 @@ export default {
 	},
 
   methods: {
-
-    getImage(name) {
-      if (name === null) {
-        return null;
-      } else if (this.numb > 0) {
-        return `src/assets/img/icon/atribute/${name}_active.svg`;
-      } else {
-        return `src/assets/img/icon/atribute/${name}_passive.svg`;
-      }
-    },
+    // getImage(name) {
+    //   if (name === null) {
+    //     return null;
+    //   } else if (this.numb > 0) {
+    //     return `src/assets/img/icon/atribute/${name}_active.svg`;
+    //   } else {
+    //     return `src/assets/img/icon/atribute/${name}_passive.svg`;
+    //   }
+    // },
 
     getCube(numb) {
       if (this.feet) {

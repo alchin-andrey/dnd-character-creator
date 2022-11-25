@@ -20,7 +20,7 @@ export default {
 
   computed: {
     get_Image() {
-      return `src/assets/img/icon/gender/${this.img}.svg`;
+      return new URL(`/src/assets/img/icon/gender/${this.img}.svg`, import.meta.url).href
     },
   },
 };

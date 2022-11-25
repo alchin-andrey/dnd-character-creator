@@ -43,6 +43,14 @@ export default {
       default: null,
     },
   },
+
+//   setup() {
+// function getIcon(name) {
+//     return new URL(`/src/assets/img/icon/fines/${name}.svg`, import.meta.url).href;
+// }
+// return {getIcon}
+// },
+
     computed: {
     t_Title() {
 		return this.t(this.title);
@@ -65,7 +73,7 @@ export default {
 	},
   methods: {
     getIcon(name) {
-      return `src/assets/img/icon/fines/${name}.svg`;
+      return new URL(`/src/assets/img/icon/fines/${name}.svg`, import.meta.url).href;
     },
   },
 };
