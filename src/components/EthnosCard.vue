@@ -10,7 +10,7 @@
 			<div
 				class="ethnos_char_back"
 				:style="{
-          'background-image': `url(${'src/assets/img/characters/halfling/ethhnos/image.png'})`,
+          'background-image': `url(${imgPass})`,
         }"
 			>
 				<race-body body_part="skin" :ethnos_name="ethnos.name"></race-body>
@@ -101,14 +101,13 @@
 </template>
 
 <script>
+// import imgPass from "@/assets/img/characters/halfling/ethhnos/image.png"
 export default {
 	name: "EthnosCard",
-	computed: {
-
-		etnos_Prof() {
-
-
-		},
+    computed: {
+      imgPass() {
+      return new URL(`/src/assets/img/characters/halfling/ethhnos/image.png`, import.meta.url).href
+    },
 	},
 	methods: {
 		hpBonus(increm_1, increm_2) {
