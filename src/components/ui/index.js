@@ -20,7 +20,6 @@ import MyColorBlock from "@/components/ui/MyColorBlock.vue";
 import MyWrapper from "@/components/ui/MyWrapper.vue";
 import MyCardTextColor from "@/components/ui/MyCardTextColor.vue";
 import MyColorSelect from "@/components/ui/MyColorSelect.vue";
-import RaceBody from "@/components/ui/RaceBody.vue";
 import MySkale from "@/components/ui/MySkale.vue";
 import MySizeGrowth from "@/components/ui/MySizeGrowth.vue";
 import MyRange from "@/components/ui/MyRange.vue";
@@ -60,7 +59,6 @@ export default [
   MyWrapper,
   MyCardTextColor,
   MyColorSelect,
-  RaceBody,
   MySkale,
   MySizeGrowth,
   GenderCard,

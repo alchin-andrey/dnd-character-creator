@@ -13,11 +13,11 @@
           'background-image': `url(${imgPass})`,
         }"
 			>
-				<race-body body_part="skin" :ethnos_name="ethnos.name"></race-body>
+				<RaceBody body_part="skin" :ethnos_name="ethnos.name" />
 
-				<race-body body_part="hair" :ethnos_name="ethnos.name"></race-body>
+				<RaceBody body_part="hair" :ethnos_name="ethnos.name" />
 
-				<race-body body_part="eyes" :ethnos_name="ethnos.name"></race-body>
+				<RaceBody body_part="eyes" :ethnos_name="ethnos.name" />
 			</div>
 
 			<!-- Этнос_Карточка_stats + qualities -->
@@ -101,12 +101,15 @@
 </template>
 
 <script>
-// import imgPass from "@/assets/img/characters/halfling/ethhnos/image.png"
+import RaceBody from "@/components/RaceBody.vue"
 export default {
 	name: "EthnosCard",
+  components: {
+    RaceBody
+  },
     computed: {
       imgPass() {
-      return new URL(`/src/assets/img/characters/halfling/ethhnos/image.png`, import.meta.url).href
+      return new URL('/src/assets/img/characters/halfling/ethhnos/image.png', import.meta.url).href
     },
 	},
 	methods: {
