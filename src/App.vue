@@ -372,7 +372,7 @@ import Header from "@/components/hook_commit/Header.vue";
 import RaceCustomStats from "@/components/hook_commit/RaceCustomStats.vue";
 
 // STORE_HOOK
-
+import RaceBody from "@/components/RaceBody.vue";
 // store components
 import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
 
@@ -421,6 +421,7 @@ export default {
 		RaceMenuSettings,
 		RaceCustomStats,
 		// НА ОБРАБОТКЕ
+    RaceBody
 	},
 
 	data() {
